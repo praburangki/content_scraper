@@ -17,6 +17,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'faker'
+  gem 'webmock'
+  gem 'vcr'
 end
 
 group :development do
@@ -32,3 +34,4 @@ group :test do
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'nokogiri'
