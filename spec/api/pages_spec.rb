@@ -1,30 +1,21 @@
 require 'rails_helper'
 
 describe API::Base do
-  describe API::V1::Page do
-    let(:page) { create(:page) }
-
-    before do
-      @page = page
-    end
-
-    it 'returns all pages including the tags' do
-      get '/api/v1/pages'
-      expect(json_response.length).to eq(1)
-      expect(response.status).to eq(200)
-      first_page = json_response.first
-
-      expect(
-        first_page.reject { |attr| attr == 'tags' }
-      ).to eq(
-        @page.attributes.reject { |attr| %w[created_at updated_at].include? attr }
-      )
-
-      expect(
-        first_page['tags']
-      ).to eq(
-        @page.tags.map { |tag| tag.attributes.reject { |attr| %w[created_at updated_at].include? attr } }
-      )
+  describe 'POST REQUEST' do
+    describe 'send a post request' do
+      it 'save the contents' do
+        VCR.use_cassette('scraper/get_page') do
+          url = 'https://www.kumpul.co'
+          post '/api/v1/pages', params: { page_url: url }
+          expect(response.status).to eq(200)
+          expect(json_response['id']).to eq(2)
+          expect(json_response['page_url']).to eq(url)
+          expect(json_response['tags'].select { |tag| tag['content_type'] == 'h1' }.size).to eq(1)
+          expect(json_response['tags'].select { |tag| tag['content_type'] == 'h2' }.size).to eq(11)
+          expect(json_response['tags'].select { |tag| tag['content_type'] == 'h3' }.size).to eq(6)
+          expect(json_response['tags'].select { |tag| tag['content_type'] == 'anchor' }.size).to eq(30)
+        end
+      end
     end
   end
 end
