@@ -34,5 +34,15 @@ module ContentScraper
                        helper_specs:  false,
                        routing_specs: false
     end
+
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        resource '/api/*', :headers => :any, :methods => [:get, :post, :options, :put]
+      end
+    end
   end
 end
