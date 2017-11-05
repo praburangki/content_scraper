@@ -1,24 +1,77 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Content Scraper
 
-Things you may want to cover:
+This is an **API** app only for scraping a page then it retrieves the contents and saves it to the database.
+The contents that will be saved are contents from the tags :
+* h1
+* h2
+* h3
+* anchor
 
-* Ruby version
+## Endpoints
+There will be two endpoints :
+* **GET** /api/v1/pages
+* **POST** /api/v1/pages
 
-* System dependencies
+#### GET
 
-* Configuration
+The **GET** request will return all the pages including the contents of the tags.
 
-* Database creation
+Example of the response for this endpoint:
 
-* Database initialization
+```json
+[
+    {
+        "id": 1,
+        "page_url": "https://www.kumpul.co",
+        "tags": [
+            {
+                "id": 1,
+                "content": "Title Header",
+                "content_type": "h1"
+            }
+        ]
+    }
+]
+```
 
-* How to run the test suite
+#### POST
+The **POST** request requires one parameter: `page_url`, and the response will return the result of the scraping.
 
-* Services (job queues, cache servers, search engines, etc.)
+Example of the response for this endpoint:
+```json
+[
+    {
+        "id": 2,
+        "page_url": "https://www.kumpul.co/about",
+        "tags": [
+            {
+                "id": 2,
+                "content": "/",
+                "content_type": "anchor"
+            }
+        ]
+    }
+]
+```
 
-* Deployment instructions
+## Gems
+This is the list of the gems that are used in this app:
+* Ruby v2.4.1
+* Rails v5.1.4
 
-* ...
+#### API Development
+* [Grape](https://github.com/ruby-grape/grape)
+* [Grape Entity](https://github.com/ruby-grape/grape-entity) (for serializing)
+* Nokogiri (for scraping)
+
+#### Testing
+* Rspec
+* Shoulda Matchers
+* VCR
+* Factory Girls (Need to update to factory bot)
+* Faker
+* Database Cleaner
+
+## Testing
+To run the test you can just simply run `rspec`
